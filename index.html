@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HumanityHub - Building Better Communities</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0f766e;
+      --primary-light: #14b8a6;
+      --primary-dark: #115e59;
+      --accent: #f59e0b;
+      --dark: #083344;
+      --light: #f0fdfa;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(15, 118, 110, 0.95);
+      backdrop-filter: blur(10px);
+      color: white;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+
+    header.scrolled {
+      padding: 15px 60px;
+      background: rgba(15, 118, 110, 0.98);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      animation: fadeInLeft 0.8s ease;
+    }
+
+    nav {
+      display: flex;
+      gap: 30px;
+      animation: fadeInRight 0.8s ease;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease;
+      padding: 5px 0;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      background: linear-gradient(135deg, rgba(15, 118, 110, 0.9), rgba(8, 51, 68, 0.8)),
+        url("https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1920") center/cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(20, 184, 166, 0.2), transparent 50%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-shadow: 2px 2px 20px rgba(0,0,0,0.3);
+      animation: fadeInUp 1s ease 0.2s backwards;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+      opacity: 0.95;
+      animation: fadeInUp 1s ease 0.4s backwards;
+    }
+
+    .hero button {
+      padding: 15px 40px;
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 1s ease 0.6s backwards;
+    }
+
+    .hero button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: white;
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    .hero button:hover::before {
+      left: 0;
+    }
+
+    .hero button:hover {
+      color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator::before {
+      content: '↓';
+      font-size: 2rem;
+      color: white;
+      opacity: 0.7;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-10px); }
+      60% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* Sections */
+    .section {
+      display: flex;
+      align-items: center;
+      padding: 100px 60px;
+      gap: 60px;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section:nth-child(even) {
+      background: var(--light);
+    }
+
+    .section img {
+      width: 45%;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      transition: all 0.5s ease;
+      object-fit: cover;
+      height: 400px;
+    }
+
+    .section img:hover {
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    }
+
+    .section.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .section-content {
+      flex: 1;
+    }
+
+    .section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--primary-dark);
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    .section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-light), var(--accent));
+      border-radius: 2px;
+    }
+
+    .section p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .section ul li {
+      font-size: 1.15rem;
+      padding: 12px 0;
+      color: #555;
+      position: relative;
+      padding-left: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .section ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--primary-light);
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+
+    .section ul li:hover {
+      color: var(--primary);
+      padding-left: 35px;
+    }
+
+    /* Stats Section */
+    .stats {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 80px 60px;
+      color: white;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-top: 50px;
+    }
+
+    .stat-item {
+      padding: 30px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-10px);
+      background: rgba(255,255,255,0.15);
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    /* Contact Section */
+    .contact {
+      background: linear-gradient(135deg, var(--dark), var(--primary-dark));
+      color: white;
+      text-align: center;
+      padding: 100px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(20, 184, 166, 0.2), transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .contact-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .contact p {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+      opacity: 0.9;
+    }
+
+    .contact button {
+      padding: 18px 50px;
+      border: none;
+      background: white;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .contact button:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      background: var(--accent);
+      color: white;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 30px;
+      font-size: 0.95rem;
+    }
+
+    footer p {
+      opacity: 0.8;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 50px;
+      border-radius: 20px;
+      max-width: 500px;
+      text-align: center;
+      animation: slideUp 0.4s ease;
+      position: relative;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-content h3 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .modal-content p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .modal-close {
+      padding: 12px 30px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      header {
+        padding: 15px 30px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+      }
+
+      .section {
+        flex-direction: column;
+        padding: 60px 30px;
+      }
+
+      .section img {
+        width: 100%;
+      }
+
+      .section h2 {
+        font-size: 2rem;
+      }
+
+      nav {
+        gap: 15px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .modal-content {
+        padding: 30px;
+        margin: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header id="header">
+    <div class="logo">HumanityHub</div>
+    <nav>
+      <a href="#about" onclick="scrollToSection('about')">About</a>
+      <a href="#mission" onclick="scrollToSection('mission')">Mission</a>
+      <a href="#impact" onclick="scrollToSection('impact')">Impact</a>
+      <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Together We Create Change</h1>
+      <p>Connecting people for a better society and a better world.</p>
+      <button onclick="scrollToSection('about')">Learn More</button>
+    </div>
+    <div class="scroll-indicator"></div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section">
+    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800" alt="Community gathering">
+    <div class="section-content">
+      <h2>About Us</h2>
+      <p>
+        HumanityHub is a non-profit organization dedicated to empowering
+        communities, supporting social initiatives, and creating sustainable impact.
+      </p>
+      <p>
+        We believe in the power of collective action and work tirelessly to bring
+        together people from all walks of life to address society's most pressing challenges.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section id="mission" class="section reverse">
+    <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=800" alt="Hands together">
+    <div class="section-content">
+      <h2>Our Mission</h2>
+      <p>
+        To unite individuals, organizations, and ideas to solve real-world
+        social challenges through collaboration and compassion.
+      </p>
+      <p>
+        We envision a world where every person has the opportunity to thrive,
+        where communities are resilient, and where positive change is driven by
+        collective purpose and shared values.
+      </p>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <h2>Our Impact in Numbers</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">50K+</div>
+        <div class="stat-label">Lives Impacted</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">120+</div>
+        <div class="stat-label">Active Programs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">35+</div>
+        <div class="stat-label">Communities Served</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Volunteers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact -->
+  <section id="impact" class="section">
+    <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800" alt="Community work">
+    <div class="section-content">
+      <h2>Our Impact</h2>
+      <p>Through dedicated efforts and community partnerships, we're making real change happen:</p>
+      <ul>
+        <li>Community development programs that strengthen local infrastructure</li>
+        <li>Youth empowerment initiatives that unlock potential</li>
+        <li>Social awareness campaigns that drive meaningful conversations</li>
+        <li>Educational support systems for underserved populations</li>
+        <li>Environmental sustainability projects</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+    <div class="contact-content">
+      <h2>Get Involved</h2>
+      <p>Join us in making a difference. Together, we can create lasting change.</p>
+      <button onclick="showModal()">Contact Us</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 HumanityHub. All rights reserved. | Building communities, Creating impact, Changing lives.</p>
+  </footer>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h3>Thank You!</h3>
+      <p>We're excited to hear from you. Please reach out to us at:</p>
+      <p style="color: var(--primary); font-weight: bold; font-size: 1.2rem;">HumanityHub@proton.me</p>
+      <button class="modal-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Smooth scrolling
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    // Modal functions
+    function showModal() {
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    // Close modal on outside click
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+      const header = document.getElementById('header');
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections
+    document.querySelectorAll('.section').forEach(section => {
+      observer.observe(section);
+    });
+
+    // Counter animation for stats
+    function animateCounter(element, target) {
+      let current = 0;
+      const increment = target / 100;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = target.toLocaleString() + '+';
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(current).toLocaleString() + '+';
+        }
+      }, 20);
+    }
+
+    // Observe stats section
+    const statsObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const statNumbers = entry.target.querySelectorAll('.stat-number');
+          statNumbers.forEach(stat => {
+            const target = parseInt(stat.textContent.replace(/\D/g, ''));
+            animateCounter(stat, target);
+          });
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const statsSection = document.querySelector('.stats');
+    if (statsSection) {
+      statsObserver.observe(statsSection);
+    }
+  </script>
+</body>
+</html>
